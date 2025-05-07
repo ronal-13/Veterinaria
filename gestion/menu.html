@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Menú Mascotas</title>
+  <link rel="stylesheet" href="../gestion/style/menu.css" />
+  <!-- Agregar íconos de Font Awesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body>
+  <div class="sidebar">
+    <div class="sidebar-header">
+      <h2 class="logo">🐾 Mascotas</h2>
+      <div class="user-info">
+        <div class="user-name">Nombre Usuario</div>
+        <div class="user-date" id="current-date">Fecha Actual</div>
+      </div>
+    </div>
+    
+    <nav class="sidebar-nav">
+      <div class="nav-section">
+        <h3 class="nav-title">Actividad</h3>
+        <a href="#registro-mascotas" class="nav-link"><i class="fas fa-paw"></i> Registro de Mascotas</a>
+        <a href="#tabla-mascotas" class="nav-link"><i class="fas fa-table"></i> Tabla de Mascotas</a>
+      </div>
+      
+      <div class="nav-section">
+        <h3 class="nav-title">Usuario</h3>
+        <a href="#registro-vacunas" class="nav-link"><i class="fas fa-syringe"></i> Registro de Vacunas</a>
+        <a href="#historial" class="nav-link"><i class="fas fa-history"></i> Historial General</a>
+      </div>
+      
+      <div class="nav-section">
+        <h3 class="nav-title">Sistema</h3>
+        <a href="#configuracion" class="nav-link"><i class="fas fa-cog"></i> Configuración</a>
+        <a href="#soporte" class="nav-link"><i class="fas fa-question-circle"></i> Soporte</a>
+        <a href="#grupo" class="nav-link"><i class="fas fa-users"></i> Grupo</a>
+      </div>
+    </nav>
+    
+    <div class="sidebar-footer">
+      <button class="logout-btn" onclick="confirmLogout()">
+        <i class="fas fa-sign-out-alt"></i> Cerrar Sesión
+      </button>
+    </div>
+  </div>
+
+  <!-- Contenido principal -->
+  <main class="main-content" id="main-content">
+    <!-- El contenido se cargará aquí dinámicamente -->
+    <div class="welcome-message">
+      <h1>Bienvenido al Sistema de Gestión de Mascotas</h1>
+      <p>Seleccione una opción del menú lateral para comenzar.</p>
+    </div>
+  </main>
+
+  <!-- Modal de confirmación -->
+  <div id="logoutModal" class="modal">
+    <div class="modal-content">
+      <p>¿Estás seguro de que deseas cerrar sesión?</p>
+      <button onclick="logout()">Sí, cerrar sesión</button>
+      <button onclick="closeModal()">Cancelar</button>
+    </div>
+  </div>
+
+  <!--<script src="../gestion/config.js"></script>-->
+</body>
+
+<!-- Modales para todas las secciones -->
+<div id="modal-container">
+  <!-- Modal Agregar/Editar Mascota -->
+  <div id="pet-modal" class="modal">
+    <div class="modal-content pet-modal">
+      <span class="close-modal">&times;</span>
+      <h3 id="pet-modal-title"><i class="fas fa-paw"></i> Agregar Nueva Mascota</h3>
+      <form id="pet-form-modal">
+        <input type="hidden" id="pet-id">
+        <div class="form-grid">
+          <div class="form-group">
+            <label for="modal-pet-name">Nombre *</label>
+            <input type="text" id="modal-pet-name" required>
+          </div>
+          <div class="form-group">
+            <label for="modal-pet-type">Tipo *</label>
+            <select id="modal-pet-type" required>
+              <option value="">Seleccione...</option>
+              <option value="dog">Perro</option>
+              <option value="cat">Gato</option>
+              <option value="bird">Ave</option>
+              <option value="rabbit">Conejo</option>
+              <option value="other">Otro</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="modal-pet-breed">Raza</label>
+            <input type="text" id="modal-pet-breed">
+          </div>
+          <div class="form-group">
+            <label for="modal-pet-age">Edad (años)</label>
+            <input type="number" id="modal-pet-age" min="0" max="30">
+          </div>
+          <div class="form-group">
+            <label for="modal-pet-owner">Dueño *</label>
+            <input type="text" id="modal-pet-owner" required>
+          </div>
+          <div class="form-group full-width">
+            <label for="modal-pet-notes">Notas</label>
+            <textarea id="modal-pet-notes" rows="3"></textarea>
+          </div>
+        </div>
+        <div class="modal-actions">
+          <button type="button" class="cancel-btn">Cancelar</button>
+          <button type="submit" class="save-btn">Guardar</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Modal Eliminar Mascota -->
+  <div id="delete-pet-modal" class="modal">
+    <div class="modal-content delete-modal">
+      <h3><i class="fas fa-exclamation-triangle"></i> Confirmar Eliminación</h3>
+      <p>¿Estás seguro de que deseas eliminar a <span id="pet-to-delete"></span>?</p>
+      <p class="warning-text">Esta acción no se puede deshacer.</p>
+      <div class="modal-actions">
+        <button type="button" class="cancel-btn">Cancelar</button>
+        <button type="button" class="confirm-delete-btn">Eliminar</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal Nueva/Editar Vacuna -->
+  <div id="vaccine-modal" class="modal">
+    <div class="modal-content vaccine-modal">
+      <span class="close-modal">&times;</span>
+      <h3 id="vaccine-modal-title"><i class="fas fa-syringe"></i> Nueva Vacuna</h3>
+      <form id="vaccine-form-modal">
+        <input type="hidden" id="vaccine-id">
+        <div class="form-grid">
+          <div class="form-group">
+            <label for="modal-vaccine-pet">Mascota *</label>
+            <select id="modal-vaccine-pet" required>
+              <option value="">Seleccione...</option>
+              <option value="1">Firulais</option>
+              <option value="2">Michi</option>
+              <option value="3">Piolín</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="modal-vaccine-type">Tipo de vacuna *</label>
+            <select id="modal-vaccine-type" required>
+              <option value="">Seleccione...</option>
+              <option value="rabia">Antirrábica</option>
+              <option value="triple">Triple Felina</option>
+              <option value="moquillo">Moquillo</option>
+              <option value="leucemia">Leucemia Felina</option>
+              <option value="otra">Otra</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="modal-vaccine-date">Fecha aplicación *</label>
+            <input type="date" id="modal-vaccine-date" required>
+          </div>
+          <div class="form-group">
+            <label for="modal-vaccine-next">Próxima dosis</label>
+            <input type="date" id="modal-vaccine-next">
+          </div>
+          <div class="form-group">
+            <label for="modal-vaccine-vet">Veterinario</label>
+            <input type="text" id="modal-vaccine-vet">
+          </div>
+          <div class="form-group full-width">
+            <label for="modal-vaccine-notes">Observaciones</label>
+            <textarea id="modal-vaccine-notes" rows="3"></textarea>
+          </div>
+        </div>
+        <div class="modal-actions">
+          <button type="button" class="cancel-btn">Cancelar</button>
+          <button type="submit" class="save-btn">Guardar</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Modal Eliminar Vacuna -->
+  <div id="delete-vaccine-modal" class="modal">
+    <div class="modal-content delete-modal">
+      <h3><i class="fas fa-exclamation-triangle"></i> Confirmar Eliminación</h3>
+      <p>¿Estás seguro de que deseas eliminar esta vacuna?</p>
+      <p class="warning-text">Esta acción no se puede deshacer.</p>
+      <div class="modal-actions">
+        <button type="button" class="cancel-btn">Cancelar</button>
+        <button type="button" class="confirm-delete-btn">Eliminar</button>
+      </div>
+    </div>
+  </div>
+</div>
+<script src="../gestion/js/login.js"></script>
+<script src="../gestion/js/router.js"></script>
+</html>

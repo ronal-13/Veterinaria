@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Iniciar Sesión</title>
+  <link rel="stylesheet" href="../gestion/style/login.css">
+  <!-- Agregar íconos de Font Awesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body>
+  <a href="../contact.html">
+    <img class="return" src="../gestion/icons/arrow-right-to-line-svgrepo-com.svg" alt="Volver">
+  </a>
+
+  <div class="login-container">
+    <div class="login-header">
+      <h1>Bienvenido</h1>
+      <p class="tagline">Conecta tus ideas inteligentes para un gran negocio</p>
+    </div>
+    
+    <div class="login-features">
+      <div class="feature">
+        <i class="fas fa-cog"></i>
+        <span>Personaliza:</span>
+      </div>
+      <div class="stats">
+        <i class="fas fa-users"></i>
+        <span>Únete a más de 50 millones de miembros alrededor del mundo</span>
+      </div>
+    </div>
+    
+    <form id="loginForm" class="login-form">
+      <div class="search-box">
+        <i class="fas fa-search"></i>
+        <input type="text" id="username" placeholder="Usuario" required />
+      </div>
+      <div class="search-box">
+        <i class="fas fa-lock"></i>
+        <input type="password" id="password" placeholder="Contraseña" required />
+      </div>
+      <button type="submit" class="signup-btn">
+        <i class="fas fa-sign-in-alt"></i> Iniciar Sesión
+      </button>
+      <p id="errorMessage" class="error-message"></p>
+    </form>
+  </div>
+
+  <script src="../gestion/js/login.js"></script>
+</body>
+</html>
