@@ -8,7 +8,7 @@ document.addEventListener('DOMContentLoaded', function() {
   updateCurrentDate();
   setupRouter();
   setupModals();
-  handleRoute();
+  handleRoute();  // <-- Esta es la llamada principal
   setupEventListeners();
 });
 
@@ -117,16 +117,19 @@ function updateCurrentDate() {
 }
 
 function setupRouter() {
-  document.querySelectorAll('.nav-link').forEach(link => {
-    link.addEventListener('click', function(e) {
-      e.preventDefault();
-      const route = this.getAttribute('href').substring(1);
-      window.location.hash = route;
-      handleRoute();
+  // Solo agrega los listeners si no existen ya
+  if (!window.routerInitialized) {
+    document.querySelectorAll('.nav-link').forEach(link => {
+      link.addEventListener('click', function(e) {
+        e.preventDefault();
+        const route = this.getAttribute('href').substring(1);
+        window.location.hash = route;
+      });
     });
-  });
-  
-  window.addEventListener('hashchange', handleRoute);
+    
+    window.addEventListener('hashchange', handleRoute);
+    window.routerInitialized = true;
+  }
 }
 
 async function handleRoute() {
@@ -186,8 +189,11 @@ async function handleRoute() {
         </form>
       `;
       
-      // Configurar el formulario
-      document.getElementById('pet-form').addEventListener('submit', async function(e) {
+    // Espera a que el DOM se actualice antes de buscar el formulario
+  setTimeout(() => {
+    const petForm = document.getElementById('pet-form');
+    if (petForm) {
+      petForm.addEventListener('submit', async function(e) {
         e.preventDefault();
         const petData = {
           name: document.getElementById('pet-name').value,
@@ -207,7 +213,9 @@ async function handleRoute() {
           alert('Ocurrió un error al registrar la mascota');
         }
       });
-      break;
+    }
+  }, 0);
+  break;
       
     case 'tabla-mascotas':
       await renderPetsTable(view);
